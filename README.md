@@ -235,8 +235,6 @@ php artisan queue:work
 ---
 
 ## 🧩 Optional Enhancements
-
-* [ ] Add batching to respect rate limits
 * [ ] Monitor queues using Laravel Horizon
 * [ ] Add job retry/backoff for failed SMS
 * [ ] Track delivery status if API supports it
