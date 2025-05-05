@@ -193,13 +193,109 @@ class SmsService
 
 ---
 
+
+If you want to handle **throttling in Laravel using Redis**, you’ll need to **complete a few setup steps** beyond what Laravel gives you out of the box.
+
+Here’s a clear checklist tailored just for your use case:
+
+---
+
+## ✅ To Use Throttling with Redis in Laravel (for queue jobs):
+
+### 1. **Install a Redis PHP client**
+
+Laravel won’t work with Redis unless you install one of these:
+
+#### ✔️ Easiest for development (Predis):
+
+```bash
+composer require predis/predis
+```
+
+> Laravel will auto-detect it.
+
+#### OR (for production, faster performance):
+
+```bash
+sudo apt install php-redis  # Linux
+brew install php-redis      # macOS
+```
+
+> Then ensure it’s enabled in `php.ini`.
+
+---
+
+### 2. **Install and Run Redis Server (if local)**
+
+If Redis is not yet installed:
+
+```bash
+# Ubuntu/Debian
+sudo apt install redis-server
+
+# macOS
+brew install redis
+```
+
+Then start the server:
+
+```bash
+redis-server
+```
+
+> Or use a hosted Redis like [Upstash](https://upstash.com/) or [Redis Cloud](https://redis.com/redis-cloud/) for production.
+
+---
+
+### 3. **Configure Laravel to Use Redis**
+
+In your `.env` file:
+
+```env
+QUEUE_CONNECTION=redis
+```
+
+And make sure `config/queue.php` has:
+
+```php
+'redis' => [
+    'driver' => 'redis',
+    'connection' => 'default',
+    'queue' => env('REDIS_QUEUE', 'default'),
+    'retry_after' => 90,
+    'block_for' => null,
+],
+```
+
+> Laravel already includes the config — you just enable it via `.env`.
+
+---
+
+### 4. **Run the Queue Worker**
+
+```bash
+php artisan queue:work redis
+```
+
+> This processes queued jobs **with Redis**, allowing rate-limited logic like:
+
+```php
+if (RateLimiter::tooManyAttempts('sms-sending', 100)) {
+    return $this->release(10);
+}
+```
+
+
+---
+
+
 ## ⚙️ 6. .env and Config Setup
 
 ### `.env`
 
 ```env
 SMS_API_KEY=your-real-api-key
-QUEUE_CONNECTION=redis
+QUEUE_CONNECTION=database //if not using throttle handler
 ```
 
 ### `config/services.php`
