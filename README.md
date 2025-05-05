@@ -100,7 +100,7 @@ class SendSmsJob implements ShouldQueue
     }
 }
 ```
-Absolutely! Here's the **full `handle()` method** for your `SendSmsJob`, using Laravel's `RateLimiter` to **throttle SMS sending to 100 messages per minute**.
+If the API had rate limiter to handle it here is the **full `handle()` method** for your `SendSmsJob`, using Laravel's `RateLimiter` to **throttle SMS sending to 100 messages per minute**.
 
 > ✅ This version ensures you **don't exceed your SMS provider's rate limit**, and Laravel automatically handles retrying.
 
