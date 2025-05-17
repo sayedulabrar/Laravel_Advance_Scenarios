@@ -418,3 +418,76 @@ php artisan migrate
 php artisan queue:work
 ```
 
+
+## Installation
+
+Minify for Laravel requires PHP 7.2 or higher. This particular version supports Laravel 8.x, 9.x, 10.x, 11.x, and 12.x.
+
+To get the latest version, simply require the project using [Composer](https://getcomposer.org):
+
+```sh
+composer require fahlisaputra/laravel-minify
+```
+## Configuration
+Minify for Laravel supports optional configuration. To get started, you'll need to publish all vendor assets:
+
+```sh
+php artisan vendor:publish --provider="Fahlisaputra\Minify\MinifyServiceProvider"
+```
+
+This will create a config/minify.php file in your app that you can modify to set your configuration. Also, make sure you check for changes to the original config file in this package between releases.
+
+## Register the Middleware (Laravel 11 or newer)
+In order Minify for Laravel can intercept your request to minify and obfuscate, you need to add the Minify middleware to the `bootstrap/app.php` file:
+
+```php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->web(append: [
+        \Fahlisaputra\Minify\Middleware\MinifyHtml::class,
+        \Fahlisaputra\Minify\Middleware\MinifyCss::class,
+        \Fahlisaputra\Minify\Middleware\MinifyJavascript::class,
+    ]);
+})
+```
+## Usage
+
+This is how you can use Minify for Laravel in your project.
+
+### Minify Asset Files
+You must set `true` on `assets_enabled` in the `config/minify.php` file to minify your asset files. 
+If the option set to `false` the route will not registered from service provider. For example:
+
+```php
+"assets_enabled" => env("MINIFY_ASSETS_ENABLED", true),
+```
+
+You can minify your asset files by using the `minify()` helper function. This function will minify your asset files and return the minify designed route. For example:
+
+```html
+<link rel="stylesheet" href="{{ minify('/css/test.css') }}">
+```
+
+```html
+<script src="{{ minify('/js/test.js') }}"></script>
+```
+
+You can modify the assets storage directory path by setting `assets_path` in the `config/minify.php` file. By default, the assets storage directory path is `resources`.
+**So you can just copy and paste the JS,css files in resources/css or resources/js**   For example:
+
+```php
+"assets_storage" => env("MINIFY_ASSETS_STORAGE", 'resources'),
+```
+
+In order to minimize the security risk, the root storage directory is hidden from the public. For the example, you set the `assets_storage` to `storage/app/private/assets` and you want to access the file `test.css` in the `storage/app/private/assets/test.css`. You can use the `minify()` helper function like this:
+
+```html
+<link rel="stylesheet" href="{{ minify('test.css') }}">
+```
+
+The `minify()` helper function will automatically search the file in the `storage/app/private/assets` directory. The result on the browser will be like this:
+
+```html
+<link rel="stylesheet" href="{minify_route_path}/test.css">
+```
+
+The `/storage/app/private/assets` directory is hidden from the public.
