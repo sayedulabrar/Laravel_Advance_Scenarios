@@ -418,6 +418,7 @@ php artisan migrate
 php artisan queue:work
 ```
 
+# Minify CSS,JS
 
 ## Installation
 
