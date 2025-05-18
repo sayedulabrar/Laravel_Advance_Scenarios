@@ -12,7 +12,11 @@ Yes! **Here's the simplest way to think about it:**
    ```php
    $projects = Project::with(['client', 'tasks'])->get(); // Explicitly loads ONLY these
    ```
-
+3. **Check loaded relations**
+   ```php
+   dd($projects->first()->getRelations());
+   ```
+   
 ### **Key Points:**
 - **Don’t enable `automaticallyEagerLoadRelationships()` globally** if you want precise control.  
 - **Use `withRelationshipAutoloading()` per-query** only when lazy-loading is acceptable.  
