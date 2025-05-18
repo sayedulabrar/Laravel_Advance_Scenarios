@@ -245,7 +245,7 @@ class ReportController extends Controller
     ```php
     Browsershot::html($template)
         ->setPaperSize('A4')
-        ->->showBackground()
+        ->showBackground()
         ->setPaperOrientation('landscape')
         ->setMargin(10, 10, 15, 10) // top, right, bottom, left
         // ->setHeaderHtml('<h1>Report Header</h1>')
