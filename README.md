@@ -1,4 +1,23 @@
 ---
+# Laravel Automatic Relationship Loading: A Complete Guide
+
+1. **For "I don't know what relations will be needed"** (e.g., admin dashboards, dynamic UIs):  
+   ```php
+   $projects = Project::all()->withRelationshipAutoloading(); // Auto-loads ANY accessed relation
+   ```
+
+2. **For "I know exactly what's needed"** (e.g., APIs, performance-critical code):  
+   ```php
+   $projects = Project::with(['client', 'tasks'])->get(); // Explicitly loads ONLY these
+   ```
+
+### **Key Points:**
+- **Don’t enable `automaticallyEagerLoadRelationships()` globally** if you want precise control.  
+- **Use `withRelationshipAutoloading()` per-query** only when lazy-loading is acceptable.  
+- **Default to `with([])`** for predictable performance.  
+
+
+---
 
 # 📡 Laravel Bulk SMS Sending (Queue + API)
 
