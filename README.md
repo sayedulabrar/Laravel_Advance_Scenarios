@@ -1,3 +1,22 @@
+# How to prevent N+1 even if you don’t need relationships?
+1. **Ensure No Relationship is Accessed in View**  
+   If your view doesn't need relationships, make sure you aren't inadvertently calling them (e.g., `$biller->someRelation` inside Blade templates). Lazy loading triggers extra queries.
+
+2. **Use `select()` to Fetch Only Necessary Columns**  
+   If you don’t need related model data, restrict what you fetch:
+   ```php
+   $billers = Biller::select('id', 'name')->get();
+   ```
+
+3. **Disable Lazy Loading (Recommended for Debugging)**  
+   Laravel provides a way to prevent lazy loading globally:
+   ```php
+   use Illuminate\Database\Eloquent\Model;
+   Model::preventLazyLoading();
+   ```
+   This will throw an error if lazy loading occurs, helping you spot unintended queries.
+
+
 
 # Laravel Automatic Relationship Loading
 
