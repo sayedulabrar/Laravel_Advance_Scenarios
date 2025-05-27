@@ -6,6 +6,37 @@ Here's a **comprehensive and organized note** on the **Spatie Laravel Permission
 
 ---
 
+## SETUP
+
+```php
+composer require spatie/laravel-permission
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+php artisan config:clear
+
+Inside User model add this train
+use HasApiTokens, HasRoles;
+
+Then make sure to add the followings in bootstrap/app.php
+->withMiddleware(function (Middleware $middleware) {
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+
+
+        $middleware->alias([
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
+
+
+        //
+    })
+
+Now the setup is ready. You can now use spatie.
+```
+
 ## 🔑 Core Concepts
 
 * **Role**: A group of permissions (e.g. `admin`, `editor`, `user`)
